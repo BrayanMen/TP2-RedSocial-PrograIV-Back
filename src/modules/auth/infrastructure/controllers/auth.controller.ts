@@ -1,0 +1,212 @@
+import {
+  Body,
+  Controller,
+  FileTypeValidator,
+  HttpCode,
+  HttpStatus,
+  MaxFileSizeValidator,
+  ParseFilePipe,
+  Post,
+  Res,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
+import {
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { RegisterUseCase } from '../../application/use-cases/register.use-cases';
+import { LoginUseCase } from '../../application/use-cases/login.use-cases';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { AuthResponseDto } from '../../application/dto/auth-response.dto';
+import { RegisterDTO } from '../../application/dto/register.dto';
+import { LoginDto } from '../../application/dto/login.dto';
+import { JwtTokenService } from '../../application/services/jwt-token.service';
+import type { Response } from 'express';
+import { JwtPayload } from 'src/core/interface/jwt-payload.interface';
+
+@ApiTags('Auth')
+@Controller('auth')
+export class AuthController {
+  constructor(
+    private readonly registerUseCase: RegisterUseCase,
+    private readonly loginUseCase: LoginUseCase,
+    private readonly jwtTokenService: JwtTokenService,
+  ) {}
+
+  @Post('register')
+  @HttpCode(HttpStatus.CREATED)
+  @UseInterceptors(FileInterceptor('profileImage'))
+  @ApiOperation({ summary: 'Registrar un usuario' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: [
+        'email',
+        'username',
+        'password',
+        'confirmPassword',
+        'firstName',
+        'lastName',
+        'birthDate',
+      ],
+      properties: {
+        email: {
+          type: 'string',
+          format: 'email',
+          example: 'usuario@domain.com',
+        },
+        username: { type: 'string', example: 'Username123' },
+        password: {
+          type: 'string',
+          format: 'password',
+          example: 'Password123',
+        },
+        confirmPassword: {
+          type: 'string',
+          format: 'password',
+          example: 'Password123',
+        },
+        firstName: { type: 'string', example: 'Pepe' },
+        lastName: { type: 'string', example: 'Mendoza' },
+        birthDate: { type: 'string', format: 'date', example: '1999-01-01' },
+        bio: {
+          type: 'string',
+          example:
+            'Artista marcial de 5 años de recorrido, practicantes de distintas disciplinas',
+        },
+        profileImage: { type: 'string', format: 'binary' },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Usuario registrado',
+    type: AuthResponseDto,
+  })
+  @ApiResponse({ status: 400, description: 'Datos inválidos' })
+  @ApiResponse({ status: 409, description: 'El usuario ya existe' })
+  async register(
+    @Body() registerDto: RegisterDTO,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 5 * 1024 * 1024 }),
+          new FileTypeValidator({ fileType: /(jpg|jpeg|png|webp)$/ }),
+        ],
+        fileIsRequired: false,
+      }),
+    )
+    profileImage?: Express.Multer.File,
+  ): Promise<AuthResponseDto> {
+    return this.registerUseCase.execute(registerDto, profileImage);
+  }
+
+  @Post('login')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Iniciar sesión' })
+  @ApiResponse({
+    status: 200,
+    description: 'Inicio de Sesion Exitoso',
+    type: AuthResponseDto,
+  })
+  @ApiResponse({ status: 401, description: 'Credenciales inválidas' })
+  async login(
+    @Body() loginDto: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<AuthResponseDto> {
+    const login = await this.loginUseCase.execute(loginDto);
+
+    res.cookie('jwt', login.token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // solo HTTPS en prod
+      maxAge: login.expiresIn * 1000, // en ms
+      sameSite: 'strict', // previene CSRF
+    });
+
+    res.cookie('refreshToken', login.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 días
+      sameSite: 'strict',
+    });
+    return {
+      token: login.token,
+      user: login.user,
+      expiresIn: login.expiresIn,
+    };
+  }
+
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Refrescar Token' })
+  @ApiResponse({
+    status: 200,
+    description: 'Token renovado',
+  })
+  @ApiResponse({ status: 401, description: 'Credenciales inválidas' })
+  async refreshToken(
+    @Body('refreshToken') refreshToken: string,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<AuthResponseDto> {
+    const payload = await this.jwtTokenService.verifyRefreshToken(refreshToken);
+
+    const token = await this.jwtTokenService.generateToken(payload);
+    const newRefreshToken =
+      await this.jwtTokenService.generateRefreshToken(payload);
+
+    res.cookie('jwt', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 15 * 60 * 1000,
+      sameSite: 'strict',
+    });
+
+    res.cookie('refreshToken', newRefreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: 'strict',
+    });
+
+    return {
+      token,
+      refreshToken: newRefreshToken,
+      expiresIn: this.jwtTokenService.getTokenExpirationTime(),
+    };
+  }
+
+  @Post('authorize')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Validar token actual' })
+  @ApiResponse({ status: 200, description: 'Token válido' })
+  @ApiResponse({ status: 401, description: 'Token inválido o vencido' })
+  async authorize(
+    @Body('token') token: string,
+  ): Promise<{ valid: boolean; user: JwtPayload }> {
+    const payload = await this.jwtTokenService.verifyToken(token);
+
+    return {
+      valid: true,
+      user: payload,
+    };
+  }
+
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Cerrar sesión' })
+  @ApiResponse({
+    status: 200,
+    description: 'Cierre de Sesion Exitoso',
+  })
+  @ApiResponse({ status: 400, description: 'No pudo cerrar sesion' })
+  logout(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('jwt');
+    res.clearCookie('refreshToken');
+    return { message: 'Sesión cerrada' };
+  }
+}
