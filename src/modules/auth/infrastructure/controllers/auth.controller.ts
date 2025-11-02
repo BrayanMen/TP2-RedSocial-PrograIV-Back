@@ -2,12 +2,15 @@ import {
   Body,
   Controller,
   FileTypeValidator,
+  Headers,
   HttpCode,
   HttpStatus,
   MaxFileSizeValidator,
   ParseFilePipe,
   Post,
+  Req,
   Res,
+  UnauthorizedException,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -25,8 +28,10 @@ import { AuthResponseDto } from '../../application/dto/auth-response.dto';
 import { RegisterDTO } from '../../application/dto/register.dto';
 import { LoginDto } from '../../application/dto/login.dto';
 import { JwtTokenService } from '../../application/services/jwt-token.service';
-import type { Response } from 'express';
+import type { Request, Response } from 'express';
 import { JwtPayload } from 'src/core/interface/jwt-payload.interface';
+import { RefreshTokenUseCases } from '../../application/use-cases/refresh-token.use-cases';
+import { AuthorizaUseCase } from '../../application/use-cases/authoriza.use-cases';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -35,6 +40,8 @@ export class AuthController {
     private readonly registerUseCase: RegisterUseCase,
     private readonly loginUseCase: LoginUseCase,
     private readonly jwtTokenService: JwtTokenService,
+    private readonly refresfTokenUseCase: RefreshTokenUseCases,
+    private readonly authorizeUseCase: AuthorizaUseCase,
   ) {}
 
   @Post('register')
@@ -150,34 +157,10 @@ export class AuthController {
   })
   @ApiResponse({ status: 401, description: 'Credenciales inválidas' })
   async refreshToken(
-    @Body('refreshToken') refreshToken: string,
+    @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ): Promise<AuthResponseDto> {
-    const payload = await this.jwtTokenService.verifyRefreshToken(refreshToken);
-
-    const token = await this.jwtTokenService.generateToken(payload);
-    const newRefreshToken =
-      await this.jwtTokenService.generateRefreshToken(payload);
-
-    res.cookie('jwt', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 15 * 60 * 1000,
-      sameSite: 'strict',
-    });
-
-    res.cookie('refreshToken', newRefreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      sameSite: 'strict',
-    });
-
-    return {
-      token,
-      refreshToken: newRefreshToken,
-      expiresIn: this.jwtTokenService.getTokenExpirationTime(),
-    };
+    return this.refresfTokenUseCase.execute(req, res);
   }
 
   @Post('authorize')
@@ -186,13 +169,22 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'Token válido' })
   @ApiResponse({ status: 401, description: 'Token inválido o vencido' })
   async authorize(
-    @Body('token') token: string,
+    @Headers('authorization') authHeader: string,
   ): Promise<{ valid: boolean; user: JwtPayload }> {
-    const payload = await this.jwtTokenService.verifyToken(token);
+    const token = authHeader?.replace('Bearer ', '');
+    if (!token) {
+      throw new UnauthorizedException('Token not provided');
+    }
+    const payload = await this.authorizeUseCase.execute(token);
 
     return {
       valid: true,
-      user: payload,
+      user: {
+        sub: payload.userId,
+        username: payload.username,
+        email: payload.email,
+        role: payload.role,
+      },
     };
   }
 
