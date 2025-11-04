@@ -16,7 +16,9 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const apiPrefix = configService.get<string>('API_PREFIX') ?? 'api/v1';
   const nodeEnv = configService.get<string>('NODE_ENV') ?? 'development';
+
   app.setGlobalPrefix(apiPrefix);
+
   //Seguridad
   app.use(helmet());
   app.use(cookieParser());
@@ -59,6 +61,7 @@ async function bootstrap() {
   // Filtro de excepciones y interceptor de solicitudes HTTP y
   app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter());
+
   const configSwagger = new DocumentBuilder()
     .setTitle('Oss! Social Network API')
     .setDescription(
@@ -99,4 +102,4 @@ async function bootstrap() {
   ╚═══════════════════════════════════════════════════════════╝
   `);
 }
-bootstrap();
+export default bootstrap();
