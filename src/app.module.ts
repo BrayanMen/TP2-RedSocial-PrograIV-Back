@@ -4,6 +4,7 @@ import { MongoConfigRootModule } from './config/db-config.module';
 import { CloudinaryModule } from './shared/cloudinary/cloudinary-module.module';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { DataModule } from './modules/data/data.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { AuthModule } from './modules/auth/auth.module';
     CloudinaryModule,
     UsersModule,
     AuthModule,
+    DataModule,
   ],
 })
 export class AppModule {}
