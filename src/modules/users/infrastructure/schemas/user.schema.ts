@@ -5,8 +5,8 @@ import {
   FighterLevel,
   MartialLevel,
 } from '../../domain/enums/martial-level.enum';
-import { UserRole } from '../../../../core/constants/roles.constant';
 import { HydratedDocument } from 'mongoose';
+import { UserRole } from '../../../../core/constants/roles.constant';
 
 export type UserDocument = HydratedDocument<UserSchema>;
 
