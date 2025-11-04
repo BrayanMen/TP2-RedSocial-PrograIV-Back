@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { v2 } from 'cloudinary';
-import { ERROR_MESSAGES } from 'src/core/constants/error-message.constant';
-import { CloudinaryUploadResponse } from 'src/core/interface/ICloudinary-result.interface';
+import { ERROR_MESSAGES } from '../../core/constants/error-message.constant';
+import { CloudinaryUploadResponse } from '../../core/interface/ICloudinary-result.interface';
 
 @Injectable()
 export class CloudinaryService {
