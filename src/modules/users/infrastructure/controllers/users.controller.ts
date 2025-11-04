@@ -25,7 +25,7 @@ import {
 } from '@nestjs/swagger';
 import { AuthGuard } from '../../../../core/guards/auth.guard';
 import { UserResponseDto } from '../../application/dto/user-response-dto';
-import { ActualUser } from 'src/core/decorators/user.decorator';
+import { ActualUser } from '../../../../core/decorators/user.decorator';
 import { UpdateProfileDto } from '../../application/dto/user-profile-update.dto';
 import { RolesGuard } from '../../../../core/guards/roles.guard';
 import { Roles } from '../../../../core/decorators/roles.decorator';
