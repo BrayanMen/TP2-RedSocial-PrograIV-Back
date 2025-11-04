@@ -9,6 +9,13 @@ export class UserRepository {
   constructor(
     @InjectModel(UserSchema.name) private userModel: Model<UserDocument>,
   ) {}
+
+  async create(data: Partial<User>): Promise<User> {
+    const newUser = new this.userModel(data);
+    const savedUser = await newUser.save();
+    return this.toEntity(savedUser);
+  }
+
   async findById(id: string): Promise<User | null> {
     const user = await this.userModel.findById(id);
     return user ? this.toEntity(user) : null;
@@ -21,6 +28,16 @@ export class UserRepository {
 
   async findByUsername(username: string): Promise<User | null> {
     const user = await this.userModel.findOne({ username });
+    return user ? this.toEntity(user) : null;
+  }
+
+  async findByEmailOrUsername(emailOrUsername: string): Promise<User | null> {
+    const user = await this.userModel.findOne({
+      $or: [
+        { email: emailOrUsername.toLowerCase() },
+        { username: emailOrUsername },
+      ],
+    });
     return user ? this.toEntity(user) : null;
   }
 
@@ -75,6 +92,7 @@ export class UserRepository {
       birthDate: doc.birthDate,
       bio: doc.bio,
       profileImage: doc.profileImage,
+      profileImagePublicId: doc.profileImagePublicId,
       role: doc.role,
       principalMartialArt: doc.principalMartialArt,
       principalMartialLevel: doc.principalMartialLevel,

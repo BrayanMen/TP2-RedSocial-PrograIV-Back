@@ -6,9 +6,14 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { v2 } from 'cloudinary';
 import { ERROR_MESSAGES } from 'src/core/constants/error-message.constant';
+import { CloudinaryUploadResponse } from 'src/core/interface/ICloudinary-result.interface';
 
 @Injectable()
 export class CloudinaryService {
+  private readonly allowedTypes: string[];
+  private readonly maxSize: number;
+  private readonly folder: string;
+
   constructor(private configService: ConfigService) {
     const cloudinaryUrl = this.configService.get<string>('CLOUDINARY_URL');
 
@@ -22,23 +27,26 @@ export class CloudinaryService {
         secure: true,
       });
     }
+    this.allowedTypes = (
+      this.configService.get<string>('ALLOWED_FILE_TYPES') ||
+      'image/jpeg,image/png,image/jpg,image/webp'
+    ).split(',');
+    this.maxSize =
+      this.configService.get<number>('MAX_FILE_SIZE_BYTES') || 5242880;
+    this.folder =
+      this.configService.get<string>('CLOUDINARY_UPLOAD_FOLDER') ||
+      'oos-social-network';
   }
-  async uploadImage(file: Express.Multer.File): Promise<string> {
-    const allowType: string[] = [
-      'image/jpeg',
-      'image/png',
-      'image/jpg',
-      'image/webp',
-    ];
-    const maxSize: number = 5242880; // 5mb
-
+  async uploadImage(
+    file: Express.Multer.File,
+  ): Promise<CloudinaryUploadResponse> {
     if (!file) {
       throw new BadGatewayException(ERROR_MESSAGES.BAD_REQUEST);
     }
-    if (!allowType.includes(file.mimetype)) {
+    if (!this.allowedTypes.includes(file.mimetype)) {
       throw new BadRequestException(ERROR_MESSAGES.INVALID_FILE_TYPE);
     }
-    if (file.size > maxSize) {
+    if (file.size > this.maxSize) {
       throw new BadRequestException(ERROR_MESSAGES.FILE_TOO_LARGE);
     }
 
@@ -46,14 +54,16 @@ export class CloudinaryService {
       const uploadStream = v2.uploader.upload_stream(
         {
           resource_type: 'auto',
-          folder: 'oos-social-network',
+          folder: this.folder,
           transformation: [{ quality: 'auto' }, { fetch_format: 'auto' }],
         },
         (error, result) => {
-          if (error)
+          if (error) {
+            console.error('Error al subir imagen:', error);
             reject(new BadRequestException('Error al subir la imagen'));
+          }
 
-          if (result) resolve(result.secure_url);
+          if (result) resolve(result as CloudinaryUploadResponse);
         },
       );
       uploadStream.end(file.buffer);

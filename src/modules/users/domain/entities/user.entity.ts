@@ -20,6 +20,7 @@ export class User {
   birthDate: Date;
   bio: string;
   profileImage?: string;
+  profileImagePublicId?: string;
   role: UserRole;
 
   // Información de artes marciales

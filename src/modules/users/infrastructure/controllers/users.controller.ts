@@ -24,7 +24,6 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthGuard } from 'src/core/guards/auth.guard';
-import { UserService } from '../../application/services/users.service';
 import { UserResponseDto } from '../../application/dto/user-response-dto';
 import { ActualUser } from 'src/core/decorators/user.decorator';
 import { UpdateProfileDto } from '../../application/dto/user-profile-update.dto';
@@ -32,12 +31,19 @@ import { RolesGuard } from 'src/core/guards/roles.guard';
 import { Roles } from 'src/core/decorators/roles.decorator';
 import { UserRole } from 'src/core/constants/roles.constant';
 import type { JwtPayload } from 'src/core/interface/jwt-payload.interface';
+import { GetAllUsersUseCase } from '../../application/use-cases/get-all-users.use-case';
+import { UpdateUserProfileUseCase } from '../../application/use-cases/update-user-profile.use-case';
+import { GetUserProfileUseCase } from '../../application/use-cases/get-user-profile.use-case';
 
 @ApiTags('Usuarios')
 @Controller('users')
 @ApiBearerAuth()
 export class UsersController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly getUserProfileUseCase: GetUserProfileUseCase,
+    private readonly updateUserProfileUseCase: UpdateUserProfileUseCase,
+    private readonly getAllUsersUseCase: GetAllUsersUseCase,
+  ) {}
 
   @Get('profile')
   @HttpCode(HttpStatus.OK)
@@ -51,7 +57,7 @@ export class UsersController {
   @ApiResponse({ status: 404, description: 'Usuario no encontrado' })
   @UseGuards(AuthGuard)
   async getMyProfile(@ActualUser() user: JwtPayload): Promise<UserResponseDto> {
-    return await this.userService.getUserProfile(user.sub);
+    return await this.getUserProfileUseCase.execute(user.sub);
   }
 
   @Get(':id')
@@ -65,7 +71,7 @@ export class UsersController {
   @ApiResponse({ status: 404, description: 'Usuario no encontrado' })
   @UseGuards(AuthGuard)
   async getUserById(@Param('id') id: string): Promise<UserResponseDto> {
-    return await this.userService.getUserProfile(id);
+    return await this.getUserProfileUseCase.execute(id);
   }
 
   @Put('profile')
@@ -95,7 +101,7 @@ export class UsersController {
     )
     profileImage?: Express.Multer.File,
   ): Promise<UserResponseDto> {
-    return this.userService.putUserProfile(
+    return this.updateUserProfileUseCase.execute(
       userId,
       updateProfileDto,
       profileImage,
@@ -137,6 +143,6 @@ export class UsersController {
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
   ) {
-    return this.userService.getAllUsers(Number(page), Number(limit));
+    return this.getAllUsersUseCase.execute(Number(page), Number(limit));
   }
 }

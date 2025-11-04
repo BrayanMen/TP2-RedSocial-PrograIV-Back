@@ -15,10 +15,12 @@ import {
 import { CloudinaryModule } from 'src/shared/cloudinary/cloudinary-module.module';
 import { UsersController } from './infrastructure/controllers/users.controller';
 import { UserRepository } from './infrastructure/repositories/user.repository';
-import { UserService } from './application/services/users.service';
 import { JwtConfigRootModule } from 'src/config/jwt-config.module';
 import { AuthGuard } from 'src/core/guards/auth.guard';
 import { RolesGuard } from 'src/core/guards/roles.guard';
+import { GetAllUsersUseCase } from './application/use-cases/get-all-users.use-case';
+import { GetUserProfileUseCase } from './application/use-cases/get-user-profile.use-case';
+import { UpdateUserProfileUseCase } from './application/use-cases/update-user-profile.use-case';
 
 @Module({
   imports: [
@@ -31,7 +33,14 @@ import { RolesGuard } from 'src/core/guards/roles.guard';
     JwtConfigRootModule,
   ],
   controllers: [UsersController],
-  providers: [UserService, UserRepository, AuthGuard, RolesGuard],
-  exports: [UserService, UserRepository],
+  providers: [
+    UserRepository,
+    AuthGuard,
+    RolesGuard,
+    GetAllUsersUseCase,
+    GetUserProfileUseCase,
+    UpdateUserProfileUseCase,
+  ],
+  exports: [UserRepository],
 })
 export class UsersModule {}

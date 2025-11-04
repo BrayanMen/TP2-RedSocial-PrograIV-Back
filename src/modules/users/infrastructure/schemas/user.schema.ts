@@ -54,6 +54,8 @@ export class UserSchema {
   bio: string;
   @Prop()
   profileImage?: string;
+  @Prop()
+  profileImagePublicId?: string;
   @Prop({
     type: String,
     enum: UserRole,
@@ -61,7 +63,6 @@ export class UserSchema {
   })
   role: UserRole;
 
-  // Información de artes marciales
   @Prop({ enum: MartialArt })
   principalMartialArt?: MartialArt;
   @Prop({ enum: MartialLevel })
@@ -74,11 +75,9 @@ export class UserSchema {
   @Prop({ type: [MartialArtInfoSchema], default: [] })
   martialArts: MartialArtInfoSchema[];
 
-  // Redes sociales
   @Prop({ type: SocialLinkSchema, default: {} })
   socialLinks?: SocialLinkSchema;
 
-  // Estadísticas
   @Prop({ default: 0 })
   followersCount: number;
   @Prop({ default: 0 })
@@ -86,7 +85,6 @@ export class UserSchema {
   @Prop({ default: 0 })
   postsCount: number;
 
-  // Control
   @Prop({ default: true })
   isActive: boolean;
   @Prop({ default: false })
