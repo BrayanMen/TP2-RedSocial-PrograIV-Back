@@ -8,7 +8,7 @@ import {
 import {
   MartialArtInfo,
   SocialLinks,
-} from 'src/core/interface/user-entity.interface';
+} from '../../../../core/interface/user-entity.interface';
 
 export class User {
   id: string;

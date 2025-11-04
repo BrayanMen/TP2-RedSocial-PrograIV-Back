@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserRepository } from '../../infrastructure/repositories/user.repository';
-import { CloudinaryService } from 'src/shared/cloudinary/cloudinary.service';
-import { ERROR_MESSAGES } from 'src/core/constants/error-message.constant';
+import { CloudinaryService } from '../../../../shared/cloudinary/cloudinary.service';
+import { ERROR_MESSAGES } from '../../../../core/constants/error-message.constant';
 import { UpdateProfileDto } from '../dto/user-profile-update.dto';
 import { UserResponseDto } from '../dto/user-response-dto';
 import { User } from '../../domain/entities/user.entity';
-import { UserMapper } from 'src/modules/auth/application/mappers/user.mapper';
+import { UserMapper } from '../../../../modules/auth/application/mappers/user.mapper';
 
 @Injectable()
 export class UpdateUserProfileUseCase {

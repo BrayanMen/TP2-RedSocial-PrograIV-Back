@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
-import { ERROR_MESSAGES } from 'src/core/constants/error-message.constant';
+import { ERROR_MESSAGES } from '../../core/constants/error-message.constant';
 
 export const validatePassword = (password: string): boolean => {
   const upperLetter = /[A-Z]/.test(password);

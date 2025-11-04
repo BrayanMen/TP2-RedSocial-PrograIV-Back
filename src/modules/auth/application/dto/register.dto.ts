@@ -9,7 +9,7 @@ import {
   Matches,
   MinLength,
 } from 'class-validator';
-import { UserRole } from 'src/core/constants/roles.constant';
+import { UserRole } from '../../../../core/constants/roles.constant';
 
 export class RegisterDTO {
   @ApiProperty({

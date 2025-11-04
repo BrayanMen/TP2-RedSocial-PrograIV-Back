@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtTokenService } from '../services/jwt-token.service';
-import { UserRepository } from 'src/modules/users/infrastructure/repositories/user.repository';
-import { ERROR_MESSAGES } from 'src/core/constants/error-message.constant';
+import { UserRepository } from '../../../../modules/users/infrastructure/repositories/user.repository';
+import { ERROR_MESSAGES } from '../../../../core/constants/error-message.constant';
 
 @Injectable()
 export class AuthorizaUseCase {

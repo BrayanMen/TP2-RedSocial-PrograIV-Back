@@ -1,8 +1,8 @@
-import { MartialArt } from 'src/modules/users/domain/enums/martial-art.enum';
+import { MartialArt } from '../../modules/users/domain/enums/martial-art.enum';
 import {
   BeltLevel,
   MartialLevel,
-} from 'src/modules/users/domain/enums/martial-level.enum';
+} from '../../modules/users/domain/enums/martial-level.enum';
 
 export interface MartialArtInfo {
   martialArt: MartialArt;

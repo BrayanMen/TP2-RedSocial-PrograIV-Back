@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from '../../infrastructure/repositories/user.repository';
-import { UserMapper } from 'src/modules/auth/application/mappers/user.mapper';
+import { UserMapper } from '../../../../modules/auth/application/mappers/user.mapper';
 
 @Injectable()
 export class GetAllUsersUseCase {

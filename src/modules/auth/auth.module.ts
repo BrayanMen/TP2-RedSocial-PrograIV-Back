@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { CloudinaryModule } from 'src/shared/cloudinary/cloudinary-module.module';
-import { JwtConfigRootModule } from 'src/config/jwt-config.module';
+import { CloudinaryModule } from '../../shared/cloudinary/cloudinary-module.module';
+import { JwtConfigRootModule } from '../../config/jwt-config.module';
 import { AuthController } from './infrastructure/controllers/auth.controller';
 import { JwtTokenService } from './application/services/jwt-token.service';
 import { PasswordService } from './application/services/password.service';

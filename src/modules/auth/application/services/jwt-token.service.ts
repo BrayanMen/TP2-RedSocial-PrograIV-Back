@@ -1,9 +1,9 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import type { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import jwtConfig from 'src/config/jwt.config';
-import { ERROR_MESSAGES } from 'src/core/constants/error-message.constant';
-import { JwtPayload } from 'src/core/interface/jwt-payload.interface';
+import jwtConfig from '../../../../config/jwt.config';
+import { ERROR_MESSAGES } from '../../../../core/constants/error-message.constant';
+import { JwtPayload } from '../../../../core/interface/jwt-payload.interface';
 
 @Injectable()
 export class JwtTokenService {

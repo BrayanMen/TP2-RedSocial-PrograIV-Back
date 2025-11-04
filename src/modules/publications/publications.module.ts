@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { CloudinaryModule } from 'src/shared/cloudinary/cloudinary-module.module';
+import { CloudinaryModule } from '../../shared/cloudinary/cloudinary-module.module';
 import {
   UserSchema,
   UserSchemaFactory,
 } from '../users/infrastructure/schemas/user.schema';
-import { JwtConfigRootModule } from 'src/config/jwt-config.module';
+import { JwtConfigRootModule } from '../../config/jwt-config.module';
 import {
   FollowSchema,
   FollowSchemaFactory,

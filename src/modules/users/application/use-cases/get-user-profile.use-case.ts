@@ -1,9 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserRepository } from '../../infrastructure/repositories/user.repository';
-
 import { UserResponseDto } from '../dto/user-response-dto';
-import { ERROR_MESSAGES } from 'src/core/constants/error-message.constant';
-import { UserMapper } from 'src/modules/auth/application/mappers/user.mapper';
+import { ERROR_MESSAGES } from '../../../../core/constants/error-message.constant';
+import { UserMapper } from '../../../../modules/auth/application/mappers/user.mapper';
 
 @Injectable()
 export class GetUserProfileUseCase {

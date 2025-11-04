@@ -3,8 +3,8 @@ import { PasswordService } from '../services/password.service';
 import { JwtTokenService } from '../services/jwt-token.service';
 import { LoginDto } from '../dto/login.dto';
 import { AuthResponseDto } from '../dto/auth-response.dto';
-import { ERROR_MESSAGES } from 'src/core/constants/error-message.constant';
-import { UserRepository } from 'src/modules/users/infrastructure/repositories/user.repository';
+import { ERROR_MESSAGES } from '../../../../core/constants/error-message.constant';
+import { UserRepository } from '../../../../modules/users/infrastructure/repositories/user.repository';
 import { UserMapper } from '../mappers/user.mapper';
 
 @Injectable()

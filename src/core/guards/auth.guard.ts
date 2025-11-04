@@ -10,7 +10,7 @@ import { ERROR_MESSAGES } from '../constants/error-message.constant';
 
 import type { ConfigType } from '@nestjs/config';
 import { JwtPayload } from '../interface/jwt-payload.interface';
-import jwtConfig from 'src/config/jwt.config';
+import jwtConfig from '../../config/jwt.config';
 
 @Injectable()
 export class AuthGuard implements CanActivate {

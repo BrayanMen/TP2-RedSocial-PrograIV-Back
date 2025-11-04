@@ -5,14 +5,14 @@ import {
 } from '@nestjs/common';
 import { PasswordService } from '../services/password.service';
 import { JwtTokenService } from '../services/jwt-token.service';
-import { CloudinaryService } from 'src/shared/cloudinary/cloudinary.service';
+import { CloudinaryService } from '../../../../shared/cloudinary/cloudinary.service';
 import { RegisterDTO } from '../dto/register.dto';
 import { AuthResponseDto } from '../dto/auth-response.dto';
-import { ERROR_MESSAGES } from 'src/core/constants/error-message.constant';
-import { validateBirthDate } from 'src/shared/utils/utils.utils';
-import { UserRole } from 'src/core/constants/roles.constant';
-import { UserRepository } from 'src/modules/users/infrastructure/repositories/user.repository';
-import { User } from 'src/modules/users/domain/entities/user.entity';
+import { ERROR_MESSAGES } from '../../../../core/constants/error-message.constant';
+import { validateBirthDate } from '../../../../shared/utils/utils.utils';
+import { UserRole } from '../../../../core/constants/roles.constant';
+import { UserRepository } from '../../../../modules/users/infrastructure/repositories/user.repository';
+import { User } from '../../../../modules/users/domain/entities/user.entity';
 import { UserMapper } from '../mappers/user.mapper';
 
 @Injectable()

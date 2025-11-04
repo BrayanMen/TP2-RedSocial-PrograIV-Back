@@ -29,7 +29,7 @@ import { RegisterDTO } from '../../application/dto/register.dto';
 import { LoginDto } from '../../application/dto/login.dto';
 import { JwtTokenService } from '../../application/services/jwt-token.service';
 import type { Request, Response } from 'express';
-import { JwtPayload } from 'src/core/interface/jwt-payload.interface';
+import { JwtPayload } from '../../../../core/interface/jwt-payload.interface';
 import { RefreshTokenUseCases } from '../../application/use-cases/refresh-token.use-cases';
 import { AuthorizaUseCase } from '../../application/use-cases/authoriza.use-cases';
 

@@ -23,14 +23,14 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { AuthGuard } from 'src/core/guards/auth.guard';
+import { AuthGuard } from '../../../../core/guards/auth.guard';
 import { UserResponseDto } from '../../application/dto/user-response-dto';
 import { ActualUser } from 'src/core/decorators/user.decorator';
 import { UpdateProfileDto } from '../../application/dto/user-profile-update.dto';
-import { RolesGuard } from 'src/core/guards/roles.guard';
-import { Roles } from 'src/core/decorators/roles.decorator';
-import { UserRole } from 'src/core/constants/roles.constant';
-import type { JwtPayload } from 'src/core/interface/jwt-payload.interface';
+import { RolesGuard } from '../../../../core/guards/roles.guard';
+import { Roles } from '../../../../core/decorators/roles.decorator';
+import { UserRole } from '../../../../core/constants/roles.constant';
+import type { JwtPayload } from '../../../../core/interface/jwt-payload.interface';
 import { GetAllUsersUseCase } from '../../application/use-cases/get-all-users.use-case';
 import { UpdateUserProfileUseCase } from '../../application/use-cases/update-user-profile.use-case';
 import { GetUserProfileUseCase } from '../../application/use-cases/get-user-profile.use-case';
