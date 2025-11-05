@@ -65,9 +65,9 @@ async function bootstrap() {
   const configSwagger = new DocumentBuilder()
     .setTitle('Oss! Social Network API')
     .setDescription(
-      'API for social network of martial artists of combat athletes ' +
-        'Allows users to share content, follow each other and connect with ' +
-        'and connect with other martial artists',
+      'API para red social de artistas marciales y atletas de combate ' +
+        'Permite a los usuarios compartir contenido, seguirse entre sí ' +
+        'y conectar con otros artistas marciales. ',
     )
     .addBearerAuth(
       {
