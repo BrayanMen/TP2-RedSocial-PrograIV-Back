@@ -12,6 +12,8 @@ import type { ConfigType } from '@nestjs/config';
 import { JwtPayload } from '../interface/jwt-payload.interface';
 import jwtConfig from '../../config/jwt.config';
 
+const PUBLIC_PATHS = ['/', '/favicon.ico'];
+
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
@@ -24,6 +26,10 @@ export class AuthGuard implements CanActivate {
     const req = context
       .switchToHttp()
       .getRequest<Request & { cookies: Record<string, string> }>();
+
+    if (PUBLIC_PATHS.includes(req.url)) {
+      return true;
+    }
 
     // const token = this.getTokenHeader(req);
     const token = req.cookies?.jwt;
