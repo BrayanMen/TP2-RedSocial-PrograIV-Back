@@ -35,4 +35,11 @@ export const ERROR_MESSAGES = {
   INTERNAL_SERVER_ERROR: 'Error interno del servidor',
   BAD_REQUEST: 'Solicitud incorrecta',
   NOT_FOUND: 'Recurso no encontrado',
+
+  //Errores de Publicaciones
+  NOT_FOUND_POST: 'Publicación no encontrada',
+  NOT_FOUND_COMMENT: 'Comentario no encontrado',
+  ALREADY_LIKE: 'Ya has dado me gusta a esta publicación',
+  NOT_LIKE: 'No has dado me gusta a esta publicación',
+  COMMENT_COULD_NOT_UPDATED: 'No se pudo actualizar el comentario',
 };

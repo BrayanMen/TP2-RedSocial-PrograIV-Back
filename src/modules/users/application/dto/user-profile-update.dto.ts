@@ -42,6 +42,42 @@ class MartialArtInfoDto {
   @Min(0)
   @Max(100)
   yearPractice?: number;
+
+  @ApiProperty({ example: 'Dojo Central', required: false })
+  @IsOptional()
+  @IsString()
+  dojo?: string;
+  @ApiProperty({ example: 'Sensei Tanaka', required: false })
+  @IsOptional()
+  @IsString()
+  instructor?: string;
+
+  @ApiProperty({
+    example: ['Campeón Regional 2023', 'Medalla de Oro Nacional'],
+    type: [String],
+    required: false,
+  })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  achievements?: string[];
+}
+
+export class LocationDto {
+  @ApiProperty({ example: 'Argentina', required: false })
+  @IsOptional()
+  @IsString()
+  country?: string;
+
+  @ApiProperty({ example: 'Buenos Aires', required: false })
+  @IsOptional()
+  @IsString()
+  state?: string;
+
+  @ApiProperty({ example: 'CABA', required: false })
+  @IsOptional()
+  @IsString()
+  city?: string;
 }
 
 class SocialLinksDto {
@@ -87,6 +123,12 @@ export class UpdateProfileDto {
   @IsString()
   bio?: string;
 
+  @ApiProperty({ type: LocationDto, required: false })
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => LocationDto)
+  location?: LocationDto;
+
   @ApiPropertyOptional({
     enum: MartialArt,
     description: 'Arte marcial principal',
@@ -108,6 +150,7 @@ export class UpdateProfileDto {
   @ApiPropertyOptional({
     enum: FighterLevel,
     description: 'Nivel como peleador',
+    example: FighterLevel.AMATEUR,
   })
   @IsOptional()
   @IsEnum(FighterLevel)
@@ -122,6 +165,21 @@ export class UpdateProfileDto {
   @ValidateNested({ each: true })
   @Type(() => MartialArtInfoDto)
   martialArts?: MartialArtInfoDto[];
+
+  @ApiProperty({ example: 'Dojo Central', required: false })
+  @IsOptional()
+  @IsString()
+  currentDojo?: string;
+
+  @ApiProperty({
+    example: ['Mejorar técnica', 'Competir nacionalmente'],
+    type: [String],
+    required: false,
+  })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  martialArtGoals?: string[];
 
   @ApiPropertyOptional({
     type: SocialLinksDto,

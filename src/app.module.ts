@@ -5,6 +5,7 @@ import { CloudinaryModule } from './shared/cloudinary/cloudinary-module.module';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { DataModule } from './modules/data/data.module';
+import { PublicationsModule } from './modules/publications/publications.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { DataModule } from './modules/data/data.module';
     UsersModule,
     AuthModule,
     DataModule,
+    PublicationsModule,
   ],
 })
 export class AppModule {}

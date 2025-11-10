@@ -20,6 +20,12 @@ class MartialArtInfoSchema {
   beltLevel?: BeltLevel;
   @Prop()
   yearPractice?: number;
+  @Prop()
+  dojo?: string;
+  @Prop()
+  instructor?: string;
+  @Prop({ type: [String], default: [] })
+  achievements: string[];
 }
 
 @Schema({ _id: false })
@@ -36,10 +42,23 @@ class SocialLinkSchema {
   website?: string;
 }
 
+export class LocationInfo {
+  @Prop()
+  country?: string;
+  @Prop()
+  state?: string;
+  @Prop()
+  city?: string;
+}
+
 @Schema({ timestamps: true })
 export class UserSchema {
   @Prop({ required: true, unique: true, lowercase: true, trim: true })
   email: string;
+  // @Prop({ default: false })
+  // emailVerified: boolean;
+  // @Prop({ select: false })
+  // emailVerificationToken?: string;
   @Prop({ required: true, unique: true, trim: true })
   username: string;
   @Prop({ required: true })
@@ -56,6 +75,8 @@ export class UserSchema {
   profileImage?: string;
   @Prop()
   profileImagePublicId?: string;
+  @Prop({ type: LocationInfo })
+  location?: LocationInfo;
   @Prop({
     type: String,
     enum: UserRole,
@@ -75,6 +96,12 @@ export class UserSchema {
   @Prop({ type: [MartialArtInfoSchema], default: [] })
   martialArts: MartialArtInfoSchema[];
 
+  @Prop()
+  currentDojo?: string;
+
+  @Prop({ type: [String], default: [] })
+  martialArtGoals: string[];
+
   @Prop({ type: SocialLinkSchema, default: {} })
   socialLinks?: SocialLinkSchema;
 
@@ -89,6 +116,9 @@ export class UserSchema {
   isActive: boolean;
   @Prop({ default: false })
   isVerified: boolean;
+
+  @Prop({ default: false })
+  isBlocked: boolean;
 
   createdAt: Date;
   updatedAt: Date;

@@ -69,6 +69,11 @@ async function bootstrap() {
         'Permite a los usuarios compartir contenido, seguirse entre sí ' +
         'y conectar con otros artistas marciales. ',
     )
+    .addTag('Autenticación', 'Endpoints de registro, login y gestión de tokens')
+    .addTag('Usuarios', 'Gestión de perfiles y usuarios')
+    .addTag('Publicaciones', 'Crear, listar y eliminar publicaciones')
+    .addTag('Likes', 'Dar y quitar me gusta en publicaciones')
+    .addTag('Comentarios', 'Crear, listar y editar comentarios')
     .addBearerAuth(
       {
         type: 'http',
