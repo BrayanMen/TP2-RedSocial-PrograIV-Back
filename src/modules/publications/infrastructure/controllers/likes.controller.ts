@@ -55,7 +55,7 @@ export class LikesController {
   @ApiOperation({ summary: 'Quitar me gusta de una publicación' })
   @ApiResponse({
     status: 200,
-    description: 'Me gusta eliminado exitosamente',
+    description: 'Me gusta eliminado',
     schema: {
       type: 'object',
       properties: {
