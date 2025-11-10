@@ -3,22 +3,16 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import {
-  UserDocument,
-  UserSchema,
-} from '../../../../../modules/users/infrastructure/schemas/user.schema';
 import { UserRole } from '../../../../../core/constants/roles.constant';
 import { ERROR_MESSAGES } from '../../../../../core/constants/error-message.constant';
 import { CommentRepository } from '../../../../../modules/publications/infrastructure/repositories/comment.repository';
+import { PostRepository } from '../../../../../modules/publications/infrastructure/repositories/post.repository';
 
 @Injectable()
 export class DeleteCommentUseCase {
   constructor(
     private readonly commentRepo: CommentRepository,
-    @InjectModel(UserSchema.name)
-    private userModel: Model<UserDocument>,
+    private readonly postRepo: PostRepository,
   ) {}
 
   async execute(
@@ -40,9 +34,6 @@ export class DeleteCommentUseCase {
     }
 
     await this.commentRepo.delete(commentId);
-
-    await this.userModel.findByIdAndUpdate(comment.authorId, {
-      $inc: { postsCount: -1 },
-    });
+    await this.postRepo.decrementComments(commentId);
   }
 }

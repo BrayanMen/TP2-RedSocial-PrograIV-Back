@@ -36,6 +36,7 @@ export class CreateCommentUseCase {
       isModified: false,
       isActive: true,
     });
+    console.log(comment);
 
     await this.postRepo.incrementComments(postId);
 

@@ -25,7 +25,7 @@ export class DislikePostUseCase {
     await this.postRepo.decrementLikes(postId);
 
     return {
-      message: 'Me gusta agregado',
+      message: 'Me gusta eliminado',
       likesCount: Math.max(0, post.likesCount - 1),
     };
   }
