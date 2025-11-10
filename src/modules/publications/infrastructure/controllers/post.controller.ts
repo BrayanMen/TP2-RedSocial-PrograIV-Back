@@ -35,6 +35,7 @@ import { ActualUser } from '../../../../core/decorators/user.decorator';
 import { GetFeedCaseUse } from '../../application/use-cases/posts/get-feed.use-case';
 import { PostSortBy } from '../../domain/enums/post-sort.enum';
 import { UserRole } from '../../../../core/constants/roles.constant';
+import { Roles } from 'src/core/decorators/roles.decorator';
 
 @ApiTags('Publicaciones')
 @Controller('posts')
@@ -125,6 +126,7 @@ export class PostsController {
   })
   @ApiResponse({ status: 403, description: 'No tienes permisos' })
   @ApiResponse({ status: 404, description: 'Publicación no encontrada' })
+  @Roles(UserRole.ADMIN, UserRole.USER)
   async deletePost(
     @Param('id') postId: string,
     @ActualUser('sub') userId: string,

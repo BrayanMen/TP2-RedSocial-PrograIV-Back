@@ -37,6 +37,7 @@ export class CreatePostUseCase {
     const post = await this.postRepository.create({
       authorId: userId,
       title: createPostDto.title,
+      content: createPostDto.content,
       image: imageUrl,
       imagePublicId: imagePublicId,
       type: createPostDto.type || PostType.GENERAL,

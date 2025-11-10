@@ -35,7 +35,7 @@ export class DeletePostUseCase {
     const isAuthor = post.authorId === userId;
     const isAdmin = userRole === UserRole.ADMIN;
 
-    if (!isAuthor && !isAdmin) {
+    if (!isAuthor || !isAdmin) {
       throw new ForbiddenException(ERROR_MESSAGES.FORBIDDEN);
     }
 
