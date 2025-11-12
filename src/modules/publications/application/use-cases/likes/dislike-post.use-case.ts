@@ -15,18 +15,29 @@ export class DislikePostUseCase {
     userId: string,
   ): Promise<{ message: string; likesCount: number }> {
     const post = await this.postRepo.findById(postId);
-    if (!post) throw new NotFoundException(ERROR_MESSAGES.NOT_FOUND_POST);
+    if (!post) {
+      throw new NotFoundException(ERROR_MESSAGES.NOT_FOUND_POST);
+    }
 
     const existLike = await this.likeRepo.findOne(userId, postId);
-    if (!existLike) throw new NotFoundException(ERROR_MESSAGES.NOT_LIKE);
+    if (!existLike) {
+      throw new NotFoundException(ERROR_MESSAGES.NOT_LIKE);
+    }
 
     await this.likeRepo.delete(userId, postId);
 
-    await this.postRepo.decrementLikes(postId);
+    const updateSuccess = await this.postRepo.decrementLikes(postId);
+
+    if (!updateSuccess) {
+      await this.likeRepo.create(userId, postId);
+      throw new Error('Error al actualizar el contador de likes');
+    }
+
+    const updatedPost = await this.postRepo.findById(postId);
 
     return {
       message: 'Me gusta eliminado',
-      likesCount: Math.max(0, post.likesCount - 1),
+      likesCount: updatedPost?.likesCount || Math.max(0, post.likesCount - 1),
     };
   }
 }

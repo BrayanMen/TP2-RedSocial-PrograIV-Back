@@ -43,7 +43,8 @@ export class PostRepository {
       .populate('authorId', 'username firstName lastName profileImage')
       .sort(sortOption)
       .skip(skip)
-      .limit(limit);
+      .limit(limit)
+      .exec();
 
     return post.map((p) => PostMapper.toEntity(p));
   }
@@ -72,27 +73,99 @@ export class PostRepository {
     return !!postDelete;
   }
 
-  async incrementLikes(id: string): Promise<void> {
-    await this.postModel.findByIdAndUpdate(id, { $inc: { likesCount: 1 } });
+  async incrementLikes(id: string): Promise<boolean> {
+    const result = await this.postModel.findByIdAndUpdate(
+      id,
+      { $inc: { likesCount: 1 } },
+      { new: true },
+    );
+    return !!result;
   }
 
-  async decrementLikes(id: string): Promise<void> {
-    await this.postModel.findByIdAndUpdate(id, { $inc: { likesCount: -1 } });
+  async decrementLikes(id: string): Promise<boolean> {
+    const result = await this.postModel.findByIdAndUpdate(
+      id,
+      [
+        {
+          $set: {
+            likesCount: {
+              $max: [{ $subtract: ['$likesCount', 1] }, 0],
+            },
+          },
+        },
+      ],
+      { new: true },
+    );
+    return !!result;
   }
 
-  async incrementComments(id: string): Promise<void> {
-    await this.postModel.findByIdAndUpdate(id, { $inc: { commentsCount: 1 } });
+  async incrementComments(id: string): Promise<boolean> {
+    const result = await this.postModel.findByIdAndUpdate(
+      id,
+      { $inc: { commentsCount: 1 } },
+      { new: true },
+    );
+    return !!result;
   }
 
-  async decrementComments(id: string): Promise<void> {
-    await this.postModel.findByIdAndUpdate(id, { $inc: { commentsCount: -1 } });
+  async decrementComments(id: string): Promise<boolean> {
+    const result = await this.postModel.findByIdAndUpdate(
+      id,
+      [
+        {
+          $set: {
+            commentsCount: {
+              $max: [{ $subtract: ['$commentsCount', 1] }, 0],
+            },
+          },
+        },
+      ],
+      { new: true },
+    );
+    return !!result;
   }
 
-  async incrementReposts(id: string): Promise<void> {
-    await this.postModel.findByIdAndUpdate(id, { $inc: { repostsCount: 1 } });
+  async incrementReposts(id: string): Promise<boolean> {
+    const result = await this.postModel.findByIdAndUpdate(
+      id,
+      { $inc: { repostsCount: 1 } },
+      { new: true },
+    );
+    return !!result;
   }
 
-  async decrementReposts(id: string): Promise<void> {
-    await this.postModel.findByIdAndUpdate(id, { $inc: { repostsCount: -1 } });
+  async decrementReposts(id: string): Promise<boolean> {
+    const result = await this.postModel.findByIdAndUpdate(
+      id,
+      [
+        {
+          $set: {
+            repostsCount: {
+              $max: [{ $subtract: ['$commentsCount', 1] }, 0],
+            },
+          },
+        },
+      ],
+      { new: true },
+    );
+    return !!result;
+  }
+  async exists(id: string): Promise<boolean> {
+    const count = await this.postModel.countDocuments({
+      _id: id,
+      isActive: true,
+    });
+    return count > 0;
+  }
+
+  async findByAuthor(authorId: string, limit: number = 10): Promise<Post[]> {
+    const posts = await this.postModel
+      .find({ authorId, isActive: true })
+      .populate('authorId', 'username firstName lastName profileImage')
+      .sort({ createdAt: -1 })
+      .limit(limit)
+      .exec();
+
+    return posts.map((p) => PostMapper.toEntity(p));
   }
 }

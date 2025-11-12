@@ -29,6 +29,12 @@ export class GetFeedCaseUse {
     sortBy: PostSortBy = PostSortBy.DATE,
     filterByUserId?: string,
   ): Promise<IPaginateRes<PostResponseDto>> {
+    console.log('📥 Parámetros recibidos:', {
+      page,
+      limit,
+      sortBy,
+      filterByUserId,
+    });
     const skip = (page - 1) * limit;
 
     const [posts, total] = await Promise.all([

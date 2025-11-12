@@ -26,11 +26,18 @@ export class LikePostUseCase {
 
     await this.likeRepo.create(userId, postId);
 
-    await this.postRepo.incrementComments(postId);
+    const updateSuccess = await this.postRepo.incrementLikes(postId);
+
+    if (!updateSuccess) {
+      await this.likeRepo.delete(userId, postId);
+      throw new Error('Error al actualizar el contador de likes');
+    }
+
+    const updatedPost = await this.postRepo.findById(postId);
 
     return {
       message: 'Me gusta agregado',
-      likesCount: post.likesCount + 1,
+      likesCount: updatedPost?.likesCount || post.likesCount + 1,
     };
   }
 }
