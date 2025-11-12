@@ -132,14 +132,14 @@ export class AuthController {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // solo HTTPS en prod
       maxAge: login.expiresIn * 1000, // en ms
-      sameSite: 'strict', // previene CSRF
+      sameSite: 'none', // previene CSRF
     });
 
     res.cookie('refreshToken', login.refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 días
-      sameSite: 'strict',
+      sameSite: 'none',
     });
     return {
       token: login.token,
