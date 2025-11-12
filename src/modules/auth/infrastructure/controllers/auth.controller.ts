@@ -127,19 +127,20 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ): Promise<AuthResponseDto> {
     const login = await this.loginUseCase.execute(loginDto);
+    const isProduction = process.env.NODE_ENV === 'production';
 
     res.cookie('jwt', login.token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // solo HTTPS en prod
+      secure: isProduction, // solo HTTPS en prod
       maxAge: login.expiresIn * 1000, // en ms
-      sameSite: 'none', // previene CSRF
+      sameSite: isProduction ? 'none' : 'lax', // previene CSRF
     });
 
     res.cookie('refreshToken', login.refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: isProduction,
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 días
-      sameSite: 'none',
+      sameSite: isProduction ? 'none' : 'lax',
     });
     return {
       token: login.token,
@@ -202,3 +203,4 @@ export class AuthController {
     return { message: 'Sesión cerrada' };
   }
 }
+
