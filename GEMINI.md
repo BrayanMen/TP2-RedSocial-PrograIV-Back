@@ -184,6 +184,7 @@ Los tokens expiran en 15 minutos y pueden refrescarse.
 * `POST /api/v1/publications/:id/comments` - Agregar un comentario
 * `PUT /api/v1/comments/:id` - Modificar un comentario
 
+---
 ### Pendiente (Sprints 4-6)
 
 #### Sprint 4 - Pendiente
@@ -197,7 +198,7 @@ Los tokens expiran en 15 minutos y pueden refrescarse.
 * **Backend (Módulo Analytics/Estadísticas):**
 * [ ] Crear `EstadisticasController`.
 * [ ] Proteger todos los endpoints de estadísticas (solo admin).
-* [ ] `GET /api/v1/analytics/posts-per-user` - (Stat 1: Publicaciones por usuario)[cite: 169, 192].
+* [ ] `GET /api/v1/analytics/posts-per-user` - (Stat 1: Publicaciones por usuario).
 * [ ] `GET /api/v1/analytics/comments-by-range` - (Stat 2: Comentarios en lapso de tiempo).
 * [ ] `GET /api/v1/analytics/comments-per-post` - (Stat 3: Comentarios por publicación).
 
@@ -205,12 +206,12 @@ Los tokens expiran en 15 minutos y pueden refrescarse.
 
 #### Sprint 5 - Pendiente
 **Backend (Módulo Analytics/Estadísticas):**
-* [ ] Implementar lógica para nuevas estadísticas[cite: 214].
-* [ ] `GET /api/v1/analytics/logins-per-user` - (Stat 4: Ingresos por usuario)[cite: 211].
-* [ ] `GET /api/v1/analytics/profile-visits` - (Stat 5: Visitas a perfiles)[cite: 212].
-* [ ] `GET /api/v1/analytics/likes-per-day` - (Stat 6: Me gusta otorgados por día)[cite: 213].
+* [ ] Implementar lógica para nuevas estadísticas.
+* [ ] `GET /api/v1/analytics/logins-per-user` - (Stat 4: Ingresos por usuario)].
+* [ ] `GET /api/v1/analytics/profile-visits` - (Stat 5: Visitas a perfiles).
+* [ ] `GET /api/v1/analytics/likes-per-day` - (Stat 6: Me gusta otorgados por día).
 * **Backend (Módulo Publicaciones):**
-* [ ] Modificar `GET /api/v1/publications` para que funcione con scroll infinito (el frontend dejará de enviar `offset` y enviará `page`)[cite: 206].
+* [ ] Modificar `GET /api/v1/publications` para que funcione con scroll infinito (el frontend dejará de enviar `offset` y enviará `page`).
 
 ---
 
