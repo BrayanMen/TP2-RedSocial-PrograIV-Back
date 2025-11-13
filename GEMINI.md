@@ -185,6 +185,7 @@ Los tokens expiran en 15 minutos y pueden refrescarse.
 * `PUT /api/v1/comments/:id` - Modificar un comentario
 
 ---
+
 ### Pendiente (Sprints 4-6)
 
 #### Sprint 4 - Pendiente
