@@ -184,6 +184,45 @@ Los tokens expiran en 15 minutos y pueden refrescarse.
 * `POST /api/v1/publications/:id/comments` - Agregar un comentario
 * `PUT /api/v1/comments/:id` - Modificar un comentario
 
+### Pendiente (Sprints 4-6)
+
+#### Sprint 4 - Pendiente
+**Backend (Módulo Usuarios):**
+* [ ] Proteger endpoints de admin con `RolesGuard` (validar token de admin).
+* [ ] `GET /api/v1/admin/users` - Listar todos los usuarios.
+* [ ] `POST /api/v1/admin/users` - Crear nuevo usuario (permitiendo definir rol).
+* [ ] `DELETE /api/v1/admin/users/:id` - Deshabilitar usuario (baja lógica).
+* [ ] `POST /api/v1/admin/users/:id/rehabilitate` - Rehabilitar usuario (alta lógica).
+
+* **Backend (Módulo Analytics/Estadísticas):**
+* [ ] Crear `EstadisticasController`.
+* [ ] Proteger todos los endpoints de estadísticas (solo admin).
+* [ ] `GET /api/v1/analytics/posts-per-user` - (Stat 1: Publicaciones por usuario)[cite: 169, 192].
+* [ ] `GET /api/v1/analytics/comments-by-range` - (Stat 2: Comentarios en lapso de tiempo).
+* [ ] `GET /api/v1/analytics/comments-per-post` - (Stat 3: Comentarios por publicación).
+
+---
+
+#### Sprint 5 - Pendiente
+**Backend (Módulo Analytics/Estadísticas):**
+* [ ] Implementar lógica para nuevas estadísticas[cite: 214].
+* [ ] `GET /api/v1/analytics/logins-per-user` - (Stat 4: Ingresos por usuario)[cite: 211].
+* [ ] `GET /api/v1/analytics/profile-visits` - (Stat 5: Visitas a perfiles)[cite: 212].
+* [ ] `GET /api/v1/analytics/likes-per-day` - (Stat 6: Me gusta otorgados por día)[cite: 213].
+* **Backend (Módulo Publicaciones):**
+* [ ] Modificar `GET /api/v1/publications` para que funcione con scroll infinito (el frontend dejará de enviar `offset` y enviará `page`)[cite: 206].
+
+---
+
+#### Sprint 6 - Pendiente
+**Backend (Módulo Publicaciones):**
+* [ ] `POST /api/v1/publications/:id/save` - Guardar una publicación (usando token).
+* [ ] `DELETE /api/v1/publications/:id/save` - Quitar publicación de guardados.
+* [ ] `POST /api/v1/publications/:id/share` - Compartir con otro usuario (ID de usuario en el body).
+* [ ] `GET /api/v1/publications/saved` - Listar mis publicaciones guardadas.
+* [ ] `GET /api/v1/publications/shared-with-me` - Listar publicaciones compartidas conmigo (y quién la compartió).
+* [ ] Agregar lógica a `GET /api/v1/publications` para los nuevos ordenamientos (por "saves" y "shares").
+
 ---
 
 ## 8. Buenas Prácticas Implementadas
