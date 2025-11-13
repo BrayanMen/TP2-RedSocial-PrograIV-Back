@@ -238,5 +238,6 @@ mkdir -p src/modules/nuevo-modulo/application/{use-cases,dto,services}
 mkdir -p src/modules/nuevo-modulo/infrastructure/{controllers,repositories,schemas}
 ```
 
-12. Objetivo de este Archivo
+##12. Objetivo de este Archivo
+
 El objetivo de este GEMINI.md es proveer un contexto completo a Google Gemini Code Assist. Úsalo para entender la relación entre el frontend y el backend, la arquitectura DDD implementada, y cómo las funcionalidades del código se alinean con los requisitos del Trabajo Práctico (TP#2).
