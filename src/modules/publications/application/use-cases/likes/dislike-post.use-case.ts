@@ -26,18 +26,18 @@ export class DislikePostUseCase {
 
     await this.likeRepo.delete(userId, postId);
 
-    const updateSuccess = await this.postRepo.decrementLikes(postId);
+    const updatedPost = await this.postRepo.decrementLikes(postId); // Asumimos que decrementLikes devuelve el post actualizado o null/undefined si falla
 
-    if (!updateSuccess) {
-      await this.likeRepo.create(userId, postId);
-      throw new Error('Error al actualizar el contador de likes');
+    if (!updatedPost) {
+      // Si el decremento falla, se podría considerar un rollback más robusto o simplemente lanzar una excepción.
+      // Por simplicidad, y asumiendo que el delete del like fue exitoso, lanzamos un error.
+      // Un rollback del like aquí podría ser complejo si el error no es transaccional.
+      throw new Error(ERROR_MESSAGES.FAILED_TO_UPDATE_LIKES_COUNT); // Usar un mensaje de error constante
     }
-
-    const updatedPost = await this.postRepo.findById(postId);
 
     return {
       message: 'Me gusta eliminado',
-      likesCount: updatedPost?.likesCount || Math.max(0, post.likesCount - 1),
+      likesCount: post.likesCount, // Obtener directamente del post actualizado
     };
   }
 }

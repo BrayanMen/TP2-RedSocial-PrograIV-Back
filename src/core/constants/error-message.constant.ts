@@ -42,4 +42,5 @@ export const ERROR_MESSAGES = {
   ALREADY_LIKE: 'Ya has dado me gusta a esta publicación',
   NOT_LIKE: 'No has dado me gusta a esta publicación',
   COMMENT_COULD_NOT_UPDATED: 'No se pudo actualizar el comentario',
+  FAILED_TO_UPDATE_LIKES_COUNT: 'Error al actualizar el contador de likes',
 };

@@ -6,10 +6,8 @@ import { AuthResponseDto } from '../dto/auth-response.dto';
 @Injectable()
 export class RefreshTokenUseCases {
   constructor(private readonly jwtTokenService: JwtTokenService) {}
-  async execute(req: Request, res: Response): Promise<AuthResponseDto> {
-    const oldToken = (req as { cookies: Record<string, string> }).cookies[
-      'refreshToken'
-    ];
+  async execute(refreshToken: string, res: Response): Promise<AuthResponseDto> {
+    const oldToken = refreshToken;
 
     if (!oldToken) {
       throw new UnauthorizedException('Refresh token missing');

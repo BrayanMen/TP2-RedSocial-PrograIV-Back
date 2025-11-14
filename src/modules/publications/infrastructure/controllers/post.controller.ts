@@ -107,13 +107,7 @@ export class PostsController {
     @Query('sortBy') sortBy: PostSortBy = PostSortBy.DATE,
     @Query('userId') filterByUserId?: string,
   ) {
-    return this.getFeedUC.execute(
-      userId,
-      Number(page),
-      Number(limit),
-      sortBy,
-      filterByUserId,
-    );
+    return this.getFeedUC.execute(userId, page, limit, sortBy, filterByUserId);
   }
 
   @Delete(':id')

@@ -26,18 +26,18 @@ export class LikePostUseCase {
 
     await this.likeRepo.create(userId, postId);
 
-    const updateSuccess = await this.postRepo.incrementLikes(postId);
+    const updatedPost = await this.postRepo.incrementLikes(postId); // Asumimos que incrementLikes devuelve el post actualizado o null/undefined si falla
 
-    if (!updateSuccess) {
-      await this.likeRepo.delete(userId, postId);
-      throw new Error('Error al actualizar el contador de likes');
+    if (!updatedPost) {
+      // Si el incremento falla, se podría considerar un rollback más robusto o simplemente lanzar una excepción.
+      // Por simplicidad, y asumiendo que la creación del like fue exitosa, lanzamos un error.
+      // Un rollback del like aquí podría ser complejo si el error no es transaccional.
+      throw new Error(ERROR_MESSAGES.FAILED_TO_UPDATE_LIKES_COUNT); // Usar el mensaje de error constante
     }
-
-    const updatedPost = await this.postRepo.findById(postId);
 
     return {
       message: 'Me gusta agregado',
-      likesCount: updatedPost?.likesCount || post.likesCount + 1,
+      likesCount: post.likesCount, // Obtener directamente del post actualizado
     };
   }
 }

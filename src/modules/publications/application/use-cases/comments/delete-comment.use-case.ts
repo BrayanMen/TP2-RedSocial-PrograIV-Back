@@ -34,6 +34,6 @@ export class DeleteCommentUseCase {
     }
 
     await this.commentRepo.delete(commentId);
-    await this.postRepo.decrementComments(commentId);
+    await this.postRepo.decrementComments(comment.postId); // Corregido a comment.postId
   }
 }

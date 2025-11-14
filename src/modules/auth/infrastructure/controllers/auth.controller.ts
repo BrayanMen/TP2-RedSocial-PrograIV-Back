@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   FileTypeValidator,
-  Headers,
   HttpCode,
   HttpStatus,
   MaxFileSizeValidator,
@@ -161,7 +160,13 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ): Promise<AuthResponseDto> {
-    return this.refresfTokenUseCase.execute(req, res);
+    const refreshToken: string | undefined = req.cookies['refreshToken'] as
+      | string
+      | undefined;
+    if (!refreshToken) {
+      throw new UnauthorizedException('Refresh Token not provided');
+    }
+    return this.refresfTokenUseCase.execute(refreshToken, res);
   }
 
   @Post('authorize')
@@ -170,9 +175,9 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'Token válido' })
   @ApiResponse({ status: 401, description: 'Token inválido o vencido' })
   async authorize(
-    @Headers('authorization') authHeader: string,
+    @Req() req: Request,
   ): Promise<{ valid: boolean; user: JwtPayload }> {
-    const token = authHeader?.replace('Bearer ', '');
+    const token: string | undefined = req.cookies['jwt'] as string | undefined;
     if (!token) {
       throw new UnauthorizedException('Token not provided');
     }
@@ -203,4 +208,3 @@ export class AuthController {
     return { message: 'Sesión cerrada' };
   }
 }
-

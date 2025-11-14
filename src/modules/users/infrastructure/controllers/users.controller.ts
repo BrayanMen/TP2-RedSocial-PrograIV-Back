@@ -143,6 +143,6 @@ export class UsersController {
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
   ) {
-    return this.getAllUsersUseCase.execute(Number(page), Number(limit));
+    return this.getAllUsersUseCase.execute(page, limit);
   }
 }

@@ -75,7 +75,7 @@ export class CommentsController {
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
   ) {
-    return this.getCommentsUC.execute(postId, Number(page), Number(limit));
+    return this.getCommentsUC.execute(postId, page, limit);
   }
 
   @Put(':commentId')
@@ -107,11 +107,11 @@ export class CommentsController {
   @ApiResponse({ status: 403, description: 'No tienes permisos' })
   @ApiResponse({ status: 404, description: 'Comentario no encontrada' })
   async deleteComment(
-    @Param('commentId') postId: string,
+    @Param('commentId') commentId: string,
     @ActualUser('sub') userId: string,
     @ActualUser('role') userRole: UserRole,
   ): Promise<{ message: string }> {
-    await this.deleteCommentUC.execute(postId, userId, userRole);
+    await this.deleteCommentUC.execute(commentId, userId, userRole);
     return { message: 'Comentario eliminada' };
   }
 }
