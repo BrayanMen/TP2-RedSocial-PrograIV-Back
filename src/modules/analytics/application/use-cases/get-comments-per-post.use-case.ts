@@ -20,23 +20,31 @@ export class GetCommentsPerPostUseCase {
 
   async execute(startDate?: Date, endDate?: Date): Promise<any[]> {
     const matchStage: FilterQuery<CommentDocument> = {};
+
     if (startDate || endDate) {
       matchStage.createdAt = {
         ...(startDate && { $gte: startDate }),
         ...(endDate && { $lte: endDate }),
       };
     }
+    const postName = this.postModel.collection.name;
+
     const pipeline: PipelineStage[] = [
       { $match: matchStage },
       {
+        $addFields: {
+          convertedPostId: { $toObjectId: '$postId' },
+        },
+      },
+      {
         $group: {
-          _id: '$postId', // Corregido
+          _id: '$convertedPostId',
           totalComments: { $sum: 1 },
         },
       },
       {
         $lookup: {
-          from: 'posts',
+          from: postName,
           localField: '_id',
           foreignField: '_id',
           as: 'postInfo',
@@ -53,6 +61,6 @@ export class GetCommentsPerPostUseCase {
       },
       { $sort: { totalComments: -1 } },
     ];
-    return this.commentModel.aggregate(pipeline).exec();
+    return await this.commentModel.aggregate(pipeline).exec();
   }
 }
