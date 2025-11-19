@@ -13,10 +13,11 @@ export class RefreshTokenUseCases {
       throw new UnauthorizedException('Refresh token missing');
     }
     const payload = await this.jwtTokenService.verifyRefreshToken(oldToken);
+    const { exp, iat, ...cleanPayload } = payload;
 
-    const token = await this.jwtTokenService.generateToken(payload);
+    const token = await this.jwtTokenService.generateToken(cleanPayload);
     const newRefreshToken =
-      await this.jwtTokenService.generateRefreshToken(payload);
+      await this.jwtTokenService.generateRefreshToken(cleanPayload);
 
     res.cookie('jwt', token, {
       httpOnly: true,

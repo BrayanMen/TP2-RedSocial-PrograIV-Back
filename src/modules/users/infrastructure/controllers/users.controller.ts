@@ -4,7 +4,6 @@ import {
   Put,
   Body,
   Param,
-  Query,
   UseGuards,
   UseInterceptors,
   UploadedFile,
@@ -19,7 +18,6 @@ import {
   ApiBearerAuth,
   ApiConsumes,
   ApiOperation,
-  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -27,9 +25,6 @@ import { AuthGuard } from '../../../../core/guards/auth.guard';
 import { UserResponseDto } from '../../application/dto/user-response-dto';
 import { ActualUser } from '../../../../core/decorators/user.decorator';
 import { UpdateProfileDto } from '../../application/dto/user-profile-update.dto';
-import { RolesGuard } from '../../../../core/guards/roles.guard';
-import { Roles } from '../../../../core/decorators/roles.decorator';
-import { UserRole } from '../../../../core/constants/roles.constant';
 import type { JwtPayload } from '../../../../core/interface/jwt-payload.interface';
 import { GetAllUsersUseCase } from '../../application/use-cases/get-all-users.use-case';
 import { UpdateUserProfileUseCase } from '../../application/use-cases/update-user-profile.use-case';
@@ -108,41 +103,41 @@ export class UsersController {
     );
   }
 
-  @Get()
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Traer todos los usuarios (paginados)' })
-  @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
-  @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
-  @ApiResponse({
-    status: 200,
-    description: 'Lista de usuarios',
-    schema: {
-      type: 'object',
-      properties: {
-        data: {
-          type: 'array',
-          items: { $ref: '#/components/schemas/UserResponseDto' },
-        },
-        meta: {
-          type: 'object',
-          properties: {
-            total: { type: 'number' },
-            page: { type: 'number' },
-            limit: { type: 'number' },
-            totalPages: { type: 'number' },
-            hasNextPage: { type: 'boolean' },
-            hasPreviousPage: { type: 'boolean' },
-          },
-        },
-      },
-    },
-  })
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles(UserRole.ADMIN)
-  async getAllUsers(
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 10,
-  ) {
-    return this.getAllUsersUseCase.execute(page, limit);
-  }
+  // @Get()
+  // @HttpCode(HttpStatus.OK)
+  // @ApiOperation({ summary: 'Traer todos los usuarios (paginados)' })
+  // @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
+  // @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: 'Lista de usuarios',
+  //   schema: {
+  //     type: 'object',
+  //     properties: {
+  //       data: {
+  //         type: 'array',
+  //         items: { $ref: '#/components/schemas/UserResponseDto' },
+  //       },
+  //       meta: {
+  //         type: 'object',
+  //         properties: {
+  //           total: { type: 'number' },
+  //           page: { type: 'number' },
+  //           limit: { type: 'number' },
+  //           totalPages: { type: 'number' },
+  //           hasNextPage: { type: 'boolean' },
+  //           hasPreviousPage: { type: 'boolean' },
+  //         },
+  //       },
+  //     },
+  //   },
+  // })
+  // @UseGuards(AuthGuard, RolesGuard)
+  // @Roles(UserRole.ADMIN)
+  // async getAllUsers(
+  //   @Query('page') page: number = 1,
+  //   @Query('limit') limit: number = 10,
+  // ) {
+  //   return this.getAllUsersUseCase.execute(page, limit);
+  // }
 }
