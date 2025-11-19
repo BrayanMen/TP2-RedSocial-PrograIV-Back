@@ -36,7 +36,7 @@ export class CommentRepository {
   ): Promise<Comment[]> {
     const comments = await this.commentModel
       .find({ postId, isActive: true })
-      .populate('authorId', 'username firstName lastName profileImage')
+      // .populate('authorId', 'username firstName lastName profileImage')
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
