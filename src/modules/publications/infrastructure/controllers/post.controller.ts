@@ -36,6 +36,7 @@ import { GetFeedCaseUse } from '../../application/use-cases/posts/get-feed.use-c
 import { PostSortBy } from '../../domain/enums/post-sort.enum';
 import { UserRole } from '../../../../core/constants/roles.constant';
 import { Roles } from 'src/core/decorators/roles.decorator';
+import { GetPostByIdUseCase } from '../../application/use-cases/posts/get-post-by-id.use-case';
 
 @ApiTags('Publicaciones')
 @Controller('posts')
@@ -46,6 +47,7 @@ export class PostsController {
     private readonly createPostUC: CreatePostUseCase,
     private readonly getFeedUC: GetFeedCaseUse,
     private readonly deletePostUC: DeletePostUseCase,
+    private readonly getPostByIdUC: GetPostByIdUseCase,
   ) {}
 
   @Post()
@@ -128,5 +130,24 @@ export class PostsController {
   ): Promise<{ message: string }> {
     await this.deletePostUC.execute(postId, userId, userRole);
     return { message: 'Publicación eliminada' };
+  }
+
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Obtener publicacion por id',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Publicación encontrada',
+    type: PostResponseDto,
+  })
+  @ApiResponse({ status: 404, description: 'Publicación no encontrada' })
+  @UseGuards(AuthGuard)
+  async getPostById(
+    @ActualUser('sub') userId: string,
+    @Param('id') postId: string,
+  ) {
+    return this.getPostByIdUC.execute(userId, postId);
   }
 }

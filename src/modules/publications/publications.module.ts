@@ -38,6 +38,8 @@ import { GetCommentsUseCase } from './application/use-cases/comments/get-comment
 import { DeleteCommentUseCase } from './application/use-cases/comments/delete-comment.use-case';
 import { UpdateCommentUseCase } from './application/use-cases/comments/update-comment.use-case';
 import { CreateCommentUseCase } from './application/use-cases/comments/create-comment.use-case';
+import { UserRepository } from '../users/infrastructure/repositories/user.repository';
+import { GetPostByIdUseCase } from './application/use-cases/posts/get-post-by-id.use-case';
 
 @Module({
   imports: [
@@ -57,10 +59,12 @@ import { CreateCommentUseCase } from './application/use-cases/comments/create-co
     LikeRepository,
     RepostRepository,
     CommentRepository,
+    UserRepository,
 
     CreatePostUseCase,
     GetFeedCaseUse,
     DeletePostUseCase,
+    GetPostByIdUseCase,
 
     LikePostUseCase,
     DislikePostUseCase,
