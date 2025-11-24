@@ -43,7 +43,7 @@ export class UserRepository {
 
   async findAll(skip: number = 0, limit: number = 10): Promise<User[]> {
     const users = await this.userModel
-      .find({ isActive: true })
+      .find()
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: -1 });
