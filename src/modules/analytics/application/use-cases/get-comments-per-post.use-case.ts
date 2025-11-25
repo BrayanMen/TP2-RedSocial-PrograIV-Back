@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model, PipelineStage } from 'mongoose';
+import { CommentPerPostResult } from 'src/core/interface/postOerUserResult.interface';
 import {
   CommentDocument,
   CommentSchema,
@@ -18,7 +19,10 @@ export class GetCommentsPerPostUseCase {
     @InjectModel(PostSchema.name) private postModel: Model<PostDocument>,
   ) {}
 
-  async execute(startDate?: Date, endDate?: Date): Promise<any[]> {
+  async execute(
+    startDate?: Date,
+    endDate?: Date,
+  ): Promise<CommentPerPostResult[]> {
     const matchStage: FilterQuery<CommentDocument> = {};
 
     if (startDate || endDate) {
@@ -61,6 +65,8 @@ export class GetCommentsPerPostUseCase {
       },
       { $sort: { totalComments: -1 } },
     ];
-    return await this.commentModel.aggregate(pipeline).exec();
+    return await this.commentModel
+      .aggregate<CommentPerPostResult>(pipeline)
+      .exec();
   }
 }

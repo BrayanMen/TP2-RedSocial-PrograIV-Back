@@ -9,6 +9,7 @@ import {
   UserSchema,
   UserDocument,
 } from '../../../users/infrastructure/schemas/user.schema';
+import { PostsPerUserResult } from 'src/core/interface/postOerUserResult.interface';
 
 @Injectable()
 export class GetPostsPerUserUseCase {
@@ -17,7 +18,10 @@ export class GetPostsPerUserUseCase {
     @InjectModel(UserSchema.name) private userModel: Model<UserDocument>, // Inyectamos para obtener el nombre real de la colección
   ) {}
 
-  async execute(startDate?: Date, endDate?: Date): Promise<any[]> {
+  async execute(
+    startDate?: Date,
+    endDate?: Date,
+  ): Promise<PostsPerUserResult[]> {
     const matchStage: FilterQuery<PostDocument> = { isActive: true };
 
     if (startDate || endDate) {
@@ -33,7 +37,6 @@ export class GetPostsPerUserUseCase {
     const pipeline: PipelineStage[] = [
       { $match: matchStage },
 
-      // 2. CORRECCIÓN CRÍTICA: Convertir authorId (string) a ObjectId
       {
         $addFields: {
           convertedAuthorId: { $toObjectId: '$authorId' },
@@ -43,16 +46,16 @@ export class GetPostsPerUserUseCase {
       // 3. Agrupar usando el ID convertido
       {
         $group: {
-          _id: '$convertedAuthorId', // Agrupamos por el ID ya convertido
+          _id: '$convertedAuthorId', // Agrupamos por el id ya convertido
           totalPosts: { $sum: 1 },
         },
       },
 
-      // 4. Lookup usando el ID convertido y el nombre correcto de la colección
+      // 4. Lookup usando el ID convertido
       {
         $lookup: {
           from: usersCollectionName,
-          localField: '_id', // Ahora _id es un ObjectId válido
+          localField: '_id',
           foreignField: '_id',
           as: 'authorInfo',
         },
@@ -74,6 +77,6 @@ export class GetPostsPerUserUseCase {
       { $sort: { totalPosts: -1 } },
     ];
 
-    return await this.postModel.aggregate(pipeline).exec();
+    return await this.postModel.aggregate<PostsPerUserResult>(pipeline).exec();
   }
 }
