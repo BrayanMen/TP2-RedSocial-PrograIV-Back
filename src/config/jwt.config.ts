@@ -8,8 +8,10 @@ export default registerAs('jwt', () => {
   }
   return {
     secret: process.env.JWT_SECRET,
-    expiresIn: process.env.JWT_EXPIRES || '15m',
-    refreshSecret: process.env.JWT_REFRESH_SECRET,
-    refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES || '7d',
+    expiresIn: (process.env.JWT_EXPIRES ||'15m') as `${number}${'m' | 'h' | 'd'}`,
+    refreshSecret: process.env.JWT_REFRESH_SECRET ,
+    refreshExpiresIn: (process.env.JWT_REFRESH_EXPIRES ||
+    '7d') as `${number}${'m' | 'h' | 'd'}`,    
   };
 });
+
